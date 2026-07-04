@@ -28,9 +28,9 @@
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; width: 100%; background: var(--void); color: var(--text); font-family: 'Manrope', sans-serif; overflow: hidden; }
   
-  /* ✨ DEEP SPACE MOVING CELEBRATION GRADIENT ✨ */
+  /* ✨ DEEP SPACE MOVING CELEBRATION GRADIENT (Layer 1) ✨ */
   #bg-overlay {
-    position: fixed; inset: 0; z-index: -3;
+    position: fixed; inset: 0; z-index: 1; /* FIXED Z-INDEX */
     background: linear-gradient(-45deg, #0f041c, #3a1459, #6c2354, #2a0b47, #0f041c);
     background-size: 400% 400%;
     animation: gradientShift 16s ease-in-out infinite;
@@ -41,8 +41,8 @@
     100% { background-position: 0% 50%; }
   }
 
-  /* ✨ LIVE CANVAS LAYER FOR STARS & BALLOONS ✨ */
-  canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; }
+  /* ✨ LIVE CANVAS LAYER FOR STARS & BALLOONS (Layer 2) ✨ */
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 2; /* FIXED Z-INDEX */ pointer-events: none; }
   
   body.shake { animation: impactVibe 0.4s cubic-bezier(.36,.07,.19,.97) both; }
   @keyframes impactVibe {
@@ -52,7 +52,7 @@
     40%, 60% { transform: translate3d(3px, -2px, 0); }
   }
 
-  /* Universal Stage Container Architecture Modules */
+  /* Universal Stage Container Architecture Modules (Layer 10) */
   .stage {
     position: absolute; inset: 0; width: 100%; height: 100%;
     display: none; opacity: 0; pointer-events: none;
@@ -60,10 +60,11 @@
     padding: 24px 16px 80px; -webkit-overflow-scrolling: touch;
     transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateY(20px);
+    z-index: 10; /* FIXED Z-INDEX */
   }
   .stage.active { display: flex; opacity: 1; pointer-events: all; transform: translateY(0); }
 
-  /* Navigation Bar */
+  /* Navigation Bar (Layer 60) */
   #top-controls { position: fixed; top: 16px; left: 0; right: 0; z-index: 60; display: flex; justify-content: space-between; padding: 0 16px; pointer-events: none;}
   .lang-toggle { display: flex; gap: 2px; background: var(--panel-solid); border: 1px solid var(--line); border-radius: 999px; padding: 3px; pointer-events: all; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
   .lang-btn { appearance: none; border: none; cursor:pointer; background:transparent; color:var(--muted); font-family:'Manrope'; font-weight:700; font-size:0.75rem; padding:6px 12px; border-radius:999px; transition:all 0.3s ease; }
@@ -521,7 +522,7 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 });
 
 /* ============================================================
-   CANVAS ENGINE: 150 STARS, 25 SPARKLES, 15 BALLOONS
+   CANVAS ENGINE: BRIGHTER BALLOONS + STARS + SPARKLES
    ============================================================ */
 const canvas = $('canvas-bg');
 const ctx = canvas.getContext('2d');
@@ -534,11 +535,12 @@ function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = wind
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
+/* BRIGHTER OPACITY FOR BALLOONS SO THEY POP OUT */
 const BALLOON_COLORS = [
-  'rgba(255, 143, 171, 0.45)', // Pink
-  'rgba(249, 211, 129, 0.45)', // Gold
-  'rgba(227, 186, 248, 0.45)', // Violet
-  'rgba(255, 127, 102, 0.45)'  // Ember
+  'rgba(255, 143, 171, 0.85)', // Pink
+  'rgba(249, 211, 129, 0.85)', // Gold
+  'rgba(227, 186, 248, 0.85)', // Violet
+  'rgba(255, 127, 102, 0.85)'  // Ember
 ];
 
 function generateBalloon() {
@@ -578,7 +580,6 @@ function generateSparkle() {
   };
 }
 
-// Populate the sky
 for(let i=0; i<15; i++) balloons.push(generateBalloon());
 for(let i=0; i<150; i++) stars.push(generateDotStar());
 for(let i=0; i<25; i++) sparkles.push(generateSparkle());
@@ -599,7 +600,7 @@ function drawBalloonShape(ctx, x, y, r, color) {
   ctx.fill();
 
   ctx.beginPath();
-  ctx.strokeStyle = "rgba(255,255,255,0.2)";
+  ctx.strokeStyle = "rgba(255,255,255,0.5)"; /* BRIGHTER STRINGS */
   ctx.lineWidth = 1.5;
   ctx.moveTo(x, y + r*0.3);
   ctx.quadraticCurveTo(x - r*0.5, y + r*1.5, x, y + r*3);
